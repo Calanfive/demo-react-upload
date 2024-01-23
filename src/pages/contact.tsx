@@ -4,15 +4,37 @@ import FormRow from '@/components/FormRow';
 import FormLabel from '@/components/FormLabel';
 import InputText from '@/components/InputText';
 import Button from '@/components/Button';
+import { useState } from 'react';
 
 
 function Contact() {
-  /**
-   * handleOnSubmit
-   */
+  const [file, setFile] = useState<File | undefined>();
 
+  function handleOnChange(e: React.FormEvent<HTMLInputElement>) {
+    const target = e.target as HTMLInputElement & {
+      files: FileList;
+    }
+    setFile(target.files[0]);
+  }
+  console.log(file);
+  
   async function handleOnSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
+    if (typeof file === "undefined") return;
+
+    const formData = new FormData();
+
+    formData.append("file", file);
+    formData.append("upload_preset", "<Votre Upload Preset non signé>");
+    formData.append("api_key", import.meta.env.VITE_CLOUDINARY_API_KEY);
+
+    const results = await fetch(
+      "https://api.cloudinary.com/v1_1/<dcduxbe0a>/image/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    ).then((r) => r.json());
   }
 
   return (
@@ -38,6 +60,12 @@ function Contact() {
             <FormLabel htmlFor="message">Message</FormLabel>
             <InputText id="message" name="message" type="text" />
           </FormRow>
+
+          <FormRow className="mb-5">
+            <FormLabel htmlFor="image"></FormLabel>
+            <input id="image" type="file" name="image" accept="image/png, image/jpg" onChange={handleOnChange} />
+          </FormRow>
+
           <Button>Submit</Button>
         </form>
 
