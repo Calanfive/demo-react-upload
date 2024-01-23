@@ -5,16 +5,26 @@ import FormLabel from '@/components/FormLabel';
 import InputText from '@/components/InputText';
 import Button from '@/components/Button';
 import { useState } from 'react';
-
+import { useDropzone } from "react-dropzone";
 
 function Contact() {
   const [file, setFile] = useState<File | undefined>();
+  const [preview, setPreview] = useState<string | ArrayBuffer | null>(null);
 
   function handleOnChange(e: React.FormEvent<HTMLInputElement>) {
     const target = e.target as HTMLInputElement & {
       files: FileList;
     }
+  
     setFile(target.files[0]);
+  
+    const file = new FileReader;
+  
+    file.onload = function() {
+      setPreview(file.result);
+    }
+  
+    file.readAsDataURL(target.files[0])
   }
   console.log(file);
   
@@ -25,11 +35,11 @@ function Contact() {
     const formData = new FormData();
 
     formData.append("file", file);
-    formData.append("upload_preset", "<Votre Upload Preset non signé>");
+    formData.append("upload_preset", "fl6tfeif");
     formData.append("api_key", import.meta.env.VITE_CLOUDINARY_API_KEY);
 
     const results = await fetch(
-      "https://api.cloudinary.com/v1_1/<dcduxbe0a>/image/upload",
+      "https://api.cloudinary.com/v1_1/dcduxbe0a/image/upload",
       {
         method: "POST",
         body: formData,
@@ -68,6 +78,10 @@ function Contact() {
 
           <Button>Submit</Button>
         </form>
+
+        {preview && (
+        <p><img src={preview as string} alt="Aperçu du téléchargement" /></p>
+      )}
 
       </Container>
     </Layout>
