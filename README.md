@@ -233,8 +233,8 @@ Dans notre fonction de rappel, nous obtenons acceptedFiles qui nous permet d'acc
 Ensuite, nous devons transmettre cette fonction onDrop à useDropzone :
 
 ```jsx
-const { getRootProps, getInputProps, isDragActive } = useDropzone({
-  onDrop,
+const { acceptedFiles, getRootProps, getInputProps, isDragActive } = useDropzone({
+  onDrop
 });
 ```
 
