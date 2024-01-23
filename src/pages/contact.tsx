@@ -29,7 +29,7 @@ function Contact() {
     const formData = new FormData();
     
     formData.append('file', acceptedFiles[0]);
-    formData.append('upload_preset', 'dcduxbe0a');
+    formData.append('upload_preset', 'fl6tfeif');
     formData.append('api_key', import.meta.env.VITE_CLOUDINARY_API_KEY);
     
     const results = await fetch(
